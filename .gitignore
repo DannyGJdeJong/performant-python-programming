@@ -1,0 +1,16 @@
+## LaTeXmk, pdflatex & biber output files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.snm
+*.nav
+*.xdv
+*.vrb

@@ -1,0 +1,165 @@
+\mode<presentation>
+
+% Requirement
+\RequirePackage{tikz}
+
+% Custom margins
+\usepackage{changepage}
+
+% Gantt grafiek
+\usepackage{pgfgantt}
+
+% Eenden
+\usepackage{tikzducks}
+
+% Codeblokken
+\usepackage{listings}
+
+% Dirtree
+\usepackage{dirtree}
+
+% Checkmarks
+\usepackage{pifont}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+% Bibliografie met APA style
+\usepackage[style=apa,backend=biber]{biblatex}
+\addbibresource{../common/sources.bib}
+
+\definecolor{Qred}{RGB}{194, 51, 80}
+\definecolor{Qgrey}{RGB}{61, 61, 61}
+
+\setbeamercolor{structure}{fg=black}
+\setbeamercolor{sidebar}{bg=Qgrey, fg=white}
+\setbeamercolor{frametitle}{bg=Qred, fg=white}
+\setbeamercolor{palette sidebar primary}{fg=white}
+\setbeamercolor{palette sidebar secondary}{fg=white}
+\setbeamertemplate{navigation symbols}{}
+
+
+\setbeamertemplate{background}{
+  \begin{tikzpicture}
+    \useasboundingbox (0,0) rectangle (\the\paperwidth, \the\paperheight);
+    \ifnum\thepage>1\relax
+      \fill[color=Qred] (current bounding box.north east)++(-1, -2.9) rectangle ++(1, 0.5) node[pos=.5] {\color{white}\thepage};
+    \fi
+  \end{tikzpicture}
+}
+
+\newdimen\beamer@sidebarwidth
+\newdimen\beamer@headheight
+\beamer@sidebarwidth=4.5\baselineskip
+\beamer@headheight=2.5\baselineskip
+\DeclareOptionBeamer{left}{\def\beamer@sidebarside{left}}
+\DeclareOptionBeamer{right}{\def\beamer@sidebarside{right}}
+\ExecuteOptionsBeamer{left}
+\ProcessOptionsBeamer
+
+% Helper function for sidebar sections
+\def\beamer@sidebarformat#1#2#3{
+  \begin{beamercolorbox}[wd=\beamer@sidebarwidth,leftskip=#1,vmode]{#2}
+    \vbox{}
+    #3\par
+    \vbox{}
+    \vskip-1.5ex
+  \end{beamercolorbox}
+}
+
+% Section in sidebar
+\defbeamertemplate*{section in sidebar}{sidebar theme}{
+  \vbox{
+    \vskip1ex
+    \beamer@sidebarformat{3pt}{section in sidebar}{\insertsectionhead}
+  }
+}
+
+% Section in sidebar selected
+\defbeamertemplate*{section in sidebar shaded}{sidebar theme}{
+  \vbox{
+    \vskip1ex
+    \beamer@sidebarformat{3pt}{section in sidebar shaded}{\insertsectionhead}%
+  }
+}
+
+% Subsection in sidebar
+\defbeamertemplate*{subsection in sidebar}{sidebar theme}{
+  \beamer@sidebarformat{5pt}{subsection in sidebar}{\insertsubsectionhead}
+}
+
+% Subsection in sidebar selected
+\defbeamertemplate*{subsection in sidebar shaded}{sidebar theme}{
+  \beamer@sidebarformat{5pt}{subsection in sidebar shaded}{\insertsubsectionhead}%
+}
+
+% Subsubsection in sidebar
+\defbeamertemplate*{subsubsection in sidebar}{sidebar theme}{
+  \beamer@sidebarformat{7pt}{subsubsection in sidebar}{\insertsubsubsectionhead}%
+}
+
+% Subsubsection in sidebar selected
+\defbeamertemplate*{subsubsection in sidebar shaded}{sidebar theme}{
+  \beamer@sidebarformat{7pt}{subsubsection in sidebar shaded}{\insertsubsubsectionhead}%
+}
+
+% Header bar
+\ifdim\beamer@headheight>0pt
+  \defbeamertemplate*{frametitle}{sidebar theme}{
+    \nointerlineskip
+    \vskip-\beamer@headheight
+    \hskip-4.75\baselineskip
+    \includegraphics[height=\beamer@headheight]{../common/img/quintor_tekst.png}
+    \vskip-\beamer@headheight
+    \vbox to \beamer@headheight{
+      \vfil
+      \leftskip=-\beamer@leftmargin
+      \advance\leftskip by0.3cm
+      \rightskip=-\beamer@rightmargin
+      \advance\rightskip by0.3cm plus1fil
+      {\usebeamercolor[fg]{frametitle}\usebeamerfont{frametitle}\insertframetitle\par}
+      {\usebeamercolor[fg]{framesubtitle}\usebeamerfont{framesubtitle}\insertframesubtitle\par}
+      \vbox{}
+      \vskip-1em
+      \vfil
+    }
+  }
+
+  \defbeamertemplate*{headline}{sidebar theme}{
+    \begin{beamercolorbox}[wd=\paperwidth]{frametitle}
+    \hfill
+    \usebeamercolor[bg]{logo}
+    \vrule width\beamer@sidebarwidth height \beamer@headheight
+    \end{beamercolorbox}
+  }
+\fi
+
+% Titlepage
+\defbeamertemplate*{title page}{customized}[1][]
+{
+  \centering
+  \includegraphics[height=4\baselineskip]{../common/img/quintor_no_padding.png} \\
+  \bigskip
+  \inserttitle\par
+  {\color{Qgrey}\insertsubtitle}\par
+  \vfill
+  { \tiny
+    \insertauthor\par
+    \insertdate\par
+  }
+}
+
+% Sidebar
+\setbeamersize{sidebar width \beamer@sidebarside=\beamer@sidebarwidth}
+\defbeamertemplate*{sidebar \beamer@sidebarside}{sidebar theme}{
+  \beamer@tempdim=\beamer@sidebarwidth
+  \advance\beamer@tempdim by -6pt{
+    \usebeamerfont{title in sidebar}
+    \vskip1.5em
+    \hskip3pt
+    \insertshorttitle[width=\beamer@tempdim,center,respectlinebreaks]\par
+    \vskip1.25em
+  }
+  \insertverticalnavigation{\beamer@sidebarwidth}%
+  \vfill
+}
+\mode<all>
